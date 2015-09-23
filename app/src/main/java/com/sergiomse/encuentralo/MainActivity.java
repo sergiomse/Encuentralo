@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
@@ -19,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ScrollView scrollView;
     private LinearLayout buttonsLayout;
-    private LinearLayout listLayout;
+
 
     private FrameLayout.LayoutParams buttonsLayoutParams;
 
@@ -36,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
 
         scrollView      = (ScrollView) findViewById(R.id.scrollView);
         buttonsLayout   = (LinearLayout) findViewById(R.id.buttonsLayout);
-        listLayout      = (LinearLayout) findViewById(R.id.listLayout);
 
         scrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
 
