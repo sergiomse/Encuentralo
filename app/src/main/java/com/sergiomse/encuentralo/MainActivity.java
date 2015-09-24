@@ -1,12 +1,13 @@
 package com.sergiomse.encuentralo;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
@@ -15,26 +16,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
+
+import com.sergiomse.encuentralo.adapters.ThingsAdapter;
+import com.sergiomse.encuentralo.database.ThingsDB;
+import com.sergiomse.encuentralo.model.Thing;
+import com.sergiomse.encuentralo.views.MainButtonsView;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_IMAGE_CAPTURE = 1;
 
-    private ScrollView scrollView;
-    private LinearLayout buttonsLayout;
+    private RecyclerView recyclerView;
+    private ThingsAdapter adapter;
 
+    private MainButtonsView buttonsLayout;
     private FrameLayout.LayoutParams buttonsLayoutParams;
 
     private DisplayMetrics dm;
+    private int scrollY;
 
     private File photoFile;
 
@@ -46,27 +53,58 @@ public class MainActivity extends AppCompatActivity {
         dm = getResources().getDisplayMetrics();
 
         buttonsLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (150 * dm.density));
+        buttonsLayout = (MainButtonsView) findViewById(R.id.buttonsLayout);
 
-        scrollView      = (ScrollView) findViewById(R.id.scrollView);
-        buttonsLayout   = (LinearLayout) findViewById(R.id.buttonsLayout);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
-        scrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
-
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollChanged() {
-                int scrollY = scrollView.getScrollY();
-                Log.d(TAG, "Scroll Y = " + scrollY);
-
-                if(scrollY > 0 && scrollY < 102 * dm.density) {
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                scrollY += dy;
+                if (scrollY > 0 && scrollY < 102 * dm.density) {
                     buttonsLayoutParams.height = (int) (150 * dm.density - scrollY);
-                } else if(scrollY > 102 * dm.density) {
+                } else if (scrollY > 102 * dm.density) {
                     buttonsLayoutParams.height = (int) (48 * dm.density);
-                } else if(scrollY == 0) {
+                } else if (scrollY == 0) {
                     buttonsLayoutParams.height = (int) (150 * dm.density);
                 }
                 buttonsLayout.setLayoutParams(buttonsLayoutParams);
             }
         });
+
+
+//        recyclerView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+//
+//            @Override
+//            public void onScrollChanged() {
+//                int scrollY = recyclerView.getScrollY();
+//                Log.d(TAG, "Scroll Y = " + scrollY);
+//
+//                if(scrollY > 0 && scrollY < 102 * dm.density) {
+//                    buttonsLayoutParams.height = (int) (150 * dm.density - scrollY);
+//                } else if(scrollY > 102 * dm.density) {
+//                    buttonsLayoutParams.height = (int) (48 * dm.density);
+//                } else if(scrollY == 0) {
+//                    buttonsLayoutParams.height = (int) (150 * dm.density);
+//                }
+//                buttonsLayout.setLayoutParams(buttonsLayoutParams);
+//            }
+//        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        ThingsDB db = new ThingsDB(this);
+        List<Thing> things = db.getThingsOrderedByDate();
+        db.cleanup();
+
+        adapter = new ThingsAdapter(things, dm);
+        recyclerView.setAdapter(adapter);
+
     }
 
     public void cameraLayoutClick(View view) {

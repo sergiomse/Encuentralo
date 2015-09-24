@@ -8,10 +8,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.sergiomse.encuentralo.database.ThingsDB;
+import com.sergiomse.encuentralo.model.Thing;
+
 import java.io.File;
+import java.util.Date;
 
 public class PhotoLocationActivity extends AppCompatActivity {
 
@@ -19,6 +25,9 @@ public class PhotoLocationActivity extends AppCompatActivity {
 
     private LinearLayout scrollWrapLayout;
     private ImageView imagePhoto;
+    private EditText etTags;
+    private EditText etLocation;
+
     private File photoFile;
 
     @Override
@@ -28,6 +37,8 @@ public class PhotoLocationActivity extends AppCompatActivity {
 
         scrollWrapLayout    = (LinearLayout) findViewById(R.id.scrollWrapLayout);
         imagePhoto          = (ImageView) findViewById(R.id.imagePhoto);
+        etTags              = (EditText) findViewById(R.id.etTags);
+        etLocation          = (EditText) findViewById(R.id.etLocation);
 
         Intent intent = getIntent();
         photoFile = (File) intent.getExtras().get("photoFile");
@@ -62,9 +73,33 @@ public class PhotoLocationActivity extends AppCompatActivity {
         imagePhoto.setImageBitmap(bitmap);
     }
 
+    public void buttonSaveClick(View view) {
+        if(!checkValidations()) {
+            return;
+        }
+
+        Thing thing = new Thing();
+        thing.setImagePath(photoFile.getAbsolutePath());
+        thing.setTags(etTags.getText().toString());
+        thing.setLocation(etLocation.getText().toString());
+        thing.setModifDate(new Date());
+
+        ThingsDB db = new ThingsDB(this);
+        db.insertThing(thing);
+        db.cleanup();
+
+        finish();
+    }
+
+    private boolean checkValidations() {
+        if(etTags.getText().toString().trim().isEmpty()) {
+            return false;
+        }
+        return true;
+    }
+
     @Override
     protected void onDestroy() {
-
         super.onDestroy();
     }
 
