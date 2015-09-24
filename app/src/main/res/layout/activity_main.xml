@@ -156,6 +156,9 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/cameraLayoutButton"
+                android:onClick="cameraLayoutClick"
+                android:clickable="true"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -165,7 +168,7 @@
                     android:id="@+id/imageView2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/new_location" />
+                    android:src="@drawable/new_camera" />
             </LinearLayout>
         </com.sergiomse.encuentralo.views.MainButtonsView>
     </FrameLayout>
