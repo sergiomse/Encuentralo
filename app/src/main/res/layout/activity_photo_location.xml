@@ -1,14 +1,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.sergiomse.encuentralo.PhotoLocationActivity">
 
     <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:id="@+id/toolbar">
+        android:minHeight="?attr/actionBarSize">
 
         <TextView
             android:layout_width="wrap_content"
@@ -17,73 +18,96 @@
             android:textSize="24sp" />
     </android.support.v7.widget.Toolbar>
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <RelativeLayout
+        android:id="@+id/buttonsLayout"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/buttonsLayout"
-        android:gravity="right">
+        android:layout_alignParentBottom="true">
 
         <Button
+            android:id="@+id/btnDelete"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancelar"
-            android:id="@+id/btnCancel" />
-
-        <Button
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Guardar"
-            android:id="@+id/btnSave"
-            android:onClick="buttonSaveClick" />
-
-    </LinearLayout>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/scrollView2"
-        android:layout_below="@+id/toolbar"
-        android:layout_above="@+id/buttonsLayout" >
+            android:text="Borrar"
+            android:layout_alignParentLeft="true"
+            android:onClick="buttonDeleteClick" />
 
         <LinearLayout
-            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:layout_alignParentRight="true">
+
+            <Button
+                android:id="@+id/btnEdit"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Editar"
+                android:onClick="buttonEditClick" />
+
+            <Button
+                android:id="@+id/btnCancel"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancelar"
+                android:onClick="buttonCancelClick" />
+
+            <Button
+                android:id="@+id/btnSave"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="buttonSaveClick"
+                android:text="Guardar" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/scrollVient"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonsLayout"
+        android:layout_below="@+id/toolbar">
+
+        <LinearLayout
+            android:id="@+id/scrollWrapLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/scrollWrapLayout">
+            android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/imagePhoto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/imagePhoto" />
+                android:scaleType="fitCenter" />
 
             <TextView
+                android:id="@+id/textVent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Etiquetas"
-                android:id="@+id/textView" />
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <EditText
+                android:id="@+id/etTags"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/etTags" />
+                android:layout_height="wrap_content" />
 
             <TextView
+                android:id="@+id/textVient"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Localización"
-                android:id="@+id/textView2" />
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <EditText
+                android:id="@+id/etLocation"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/etLocation" />
+                android:layout_height="match_parent" />
         </LinearLayout>
     </ScrollView>
 
