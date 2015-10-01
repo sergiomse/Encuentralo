@@ -25,6 +25,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.sergiomse.encuentralo.adapters.ThingsAdapter;
+import com.sergiomse.encuentralo.camera.CameraActivity;
 import com.sergiomse.encuentralo.database.ThingsDB;
 import com.sergiomse.encuentralo.model.Thing;
 import com.sergiomse.encuentralo.views.MainButtonsView;
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
         dm = getResources().getDisplayMetrics();
         getBackCameraResolutionList();
-        calculateBestResoultion();
+        //calculateBestResoultion();
 
         buttonsLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (150 * dm.density));
         buttonsLayout = (MainButtonsView) findViewById(R.id.buttonsLayout);
@@ -130,11 +131,8 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        Camera camera = getCameraInstance();
-        if(camera == null) {
-            Toast.makeText(this, "No obtener una cámara", Toast.LENGTH_LONG).show();
-            return;
-        }
+        Intent intent = new Intent(this, CameraActivity.class);
+        startActivity(intent);
     }
 
     /** Check if this device has a camera */
@@ -148,39 +146,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Try to get the Facing Back Camera, if not the first camera in the list
-     * @return
-     */
-    public Camera getCameraInstance(){
-        Camera c = null;
 
-        int noOfCameras = Camera.getNumberOfCameras();
-
-        int cameraFacingBackId = -1;
-        for (int i = 0; i < noOfCameras; i++) {
-            Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
-            Camera.getCameraInfo(i, cameraInfo);
-
-            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
-                cameraFacingBackId = i;
-            }
-        }
-
-        int cameraId = -1;
-        if(cameraFacingBackId == -1 && noOfCameras > 0) {
-            cameraId = 0;
-        }
-
-        if(cameraId != -1) {
-            try {
-                c = Camera.open(cameraId);
-            } catch (Exception e) {
-                Log.d(TAG, "No se puede abrir la cámara: " + e.getMessage());
-            }
-        }
-        return c; // returns null if camera is unavailable
-    }
 
 
 
@@ -289,25 +255,4 @@ public class MainActivity extends AppCompatActivity {
         bestCameraSize = minSize;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 }

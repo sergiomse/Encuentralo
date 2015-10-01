@@ -28,7 +28,7 @@
             android:label="@string/title_activity_photo_location" >
         </activity>
         <activity
-            android:name=".CameraActivity"
+            android:name=".camera.CameraActivity"
             android:label="@string/title_activity_camera" >
         </activity>
     </application>
