@@ -1,5 +1,6 @@
 package com.sergiomse.encuentralo;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -56,7 +57,7 @@ public class PhotoLocationActivity extends AppCompatActivity {
 
 
         Intent intent = getIntent();
-        photoFile = (File) intent.getExtras().get("photoFile");
+        photoFile = new File( (String) intent.getExtras().get("photoFile"));
         state = intent.getIntExtra("state", 0);
 
         setState();
@@ -121,7 +122,10 @@ public class PhotoLocationActivity extends AppCompatActivity {
                 changeState(VIEW_STATE);
                 break;
             case NEW_STATE:
-                super.onBackPressed();
+                photoFile.delete();
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 break;
         }
     }
@@ -160,7 +164,10 @@ public class PhotoLocationActivity extends AppCompatActivity {
 
     public void buttonCancelClick(View view) {
         if(state == NEW_STATE) {
-            finish();
+            photoFile.delete();
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
         }
     }
 

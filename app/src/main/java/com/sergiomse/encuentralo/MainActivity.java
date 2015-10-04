@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         dm = getResources().getDisplayMetrics();
-        getBackCameraResolutionList();
         //calculateBestResoultion();
 
         buttonsLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (150 * dm.density));
@@ -193,9 +192,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private void getBackCameraResolutionList() {
-        getBackCameraResolutionListAPI16();
-    }
+
 
     @TargetApi(21)
     public void getBackCameraResolutionListAPI21() {
@@ -209,50 +206,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void getBackCameraResolutionListAPI16() {
-        int noOfCameras = Camera.getNumberOfCameras();
 
-        for (int i = 0; i < noOfCameras; i++) {
-            Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
-            Camera.getCameraInfo(i, cameraInfo);
 
-            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
-                Camera camera = Camera.open(i);
 
-                Camera.Parameters cameraParams = camera.getParameters();
-//                for (int j = 0; j < cameraParams.getSupportedPictureSizes().size(); j++) {
-//                    long pixelCountTemp = cameraParams.getSupportedPictureSizes().get(i).width * cameraParams.getSupportedPictureSizes().get(i).height;
-//                    if (pixelCountTemp > pixelCount) {
-//                        pixelCount = pixelCountTemp;
-//                        maxResolution = ((float) pixelCountTemp) / (1024000.0f);
-//                    }
-//                }
-
-                cameraSizes = cameraParams.getSupportedPictureSizes();
-                camera.release();
-            }
-        }
-    }
-
-    private void calculateBestResoultion() {
-
-        long min = -1;
-        Camera.Size minSize = null;
-        for(Camera.Size size : cameraSizes) {
-            if(min == -1) {
-                min = size.height * size.width;
-                minSize = size;
-                continue;
-            }
-
-            long res = size.height * size.width;
-            if(res < min) {
-                min = res;
-                minSize = size;
-            }
-        }
-
-        bestCameraSize = minSize;
-    }
 
 }

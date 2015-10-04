@@ -1,5 +1,6 @@
 package com.sergiomse.encuentralo.camera;
 
+import android.content.Intent;
 import android.hardware.Camera;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.sergiomse.encuentralo.PhotoLocationActivity;
 import com.sergiomse.encuentralo.R;
 
 import java.io.File;
@@ -19,6 +21,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class CameraActivity extends AppCompatActivity {
 
@@ -26,6 +29,7 @@ public class CameraActivity extends AppCompatActivity {
 
     private Camera mCamera;
     private CameraPreview mPreview;
+    private String photoFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,13 +77,40 @@ public class CameraActivity extends AppCompatActivity {
         if(cameraId != -1) {
             try {
                 c = Camera.open(cameraId);
+                Camera.Parameters cameraParams = c.getParameters();
+                List<Camera.Size> cameraSizes = cameraParams.getSupportedPictureSizes();
+                Camera.Size bestCameraSize = calculateBestResoultion(cameraSizes);
+                Camera.Parameters parameters = c.getParameters();
+                parameters.setPictureSize(bestCameraSize.width, bestCameraSize.height);
+                c.setParameters(parameters);
             } catch (Exception e) {
                 Log.d(TAG, "No se puede abrir la cámara: " + e.getMessage());
             }
         }
+
         return c; // returns null if camera is unavailable
     }
 
+    private Camera.Size calculateBestResoultion(List<Camera.Size> cameraSizes) {
+
+        long min = -1;
+        Camera.Size minSize = null;
+        for(Camera.Size size : cameraSizes) {
+            if(min == -1) {
+                min = size.height * size.width;
+                minSize = size;
+                continue;
+            }
+
+            long res = size.height * size.width;
+            if(res < min) {
+                min = res;
+                minSize = size;
+            }
+        }
+
+        return minSize;
+    }
 
     public void captureImage(View view) {
         mCamera.takePicture(null, null, mPicture);
@@ -91,6 +122,7 @@ public class CameraActivity extends AppCompatActivity {
         public void onPictureTaken(byte[] data, Camera camera) {
 
             File pictureFile = getOutputMediaFile();
+            photoFile = pictureFile.getAbsolutePath();
             if (pictureFile == null){
                 Log.d(TAG, "Error creating media file, check storage permissions");
                 return;
@@ -105,6 +137,11 @@ public class CameraActivity extends AppCompatActivity {
             } catch (IOException e) {
                 Log.d(TAG, "Error accessing file: " + e.getMessage());
             }
+
+            Intent intent = new Intent(CameraActivity.this, PhotoLocationActivity.class);
+            intent.putExtra("photoFile", photoFile);
+            intent.putExtra("state", PhotoLocationActivity.NEW_STATE);
+            startActivity(intent);
         }
     };
 
