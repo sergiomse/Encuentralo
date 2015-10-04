@@ -1,10 +1,12 @@
 package com.sergiomse.encuentralo;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,6 +31,7 @@ public class PhotoLocationActivity extends AppCompatActivity {
     public static final int NEW_STATE = 2;
 
     private int state;
+    private long thingId;
 
     private LinearLayout scrollWrapLayout;
     private ImageView imagePhoto;
@@ -64,10 +67,10 @@ public class PhotoLocationActivity extends AppCompatActivity {
                 photoFile = new File( (String) intent.getExtras().get("photoFile"));
                 break;
             case VIEW_STATE:
-                long id = intent.getLongExtra("id", -1);
+                thingId = intent.getLongExtra("id", -1);
 
                 ThingsDB db = new ThingsDB(this);
-                Thing thing = db.getThingById(id);
+                Thing thing = db.getThingById(thingId);
                 db.cleanup();
 
                 photoFile = new File(thing.getImagePath());
@@ -171,7 +174,26 @@ public class PhotoLocationActivity extends AppCompatActivity {
     }
 
     public void buttonDeleteClick(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("¿Desea borrar este objeto?")
+                .setTitle("Borrar")
+                .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        ThingsDB db = new ThingsDB(PhotoLocationActivity.this);
+                        db.deleteThing(PhotoLocationActivity.this.thingId);
+                        db.cleanup();
 
+                        dialog.cancel();
+                        PhotoLocationActivity.this.finish();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     public void buttonEditClick(View view) {

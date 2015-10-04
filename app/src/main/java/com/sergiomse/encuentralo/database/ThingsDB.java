@@ -36,6 +36,7 @@ public class ThingsDB {
                                             MODIFICATION_DATE_COLUMN};
 
 
+
     private static class ThingsDBOpenHelper extends SQLiteOpenHelper {
 
         private static final String TAG = ThingsDBOpenHelper.class.getSimpleName();
@@ -127,5 +128,9 @@ public class ThingsDB {
         }
 
         return thing;
+    }
+
+    public void deleteThing(long id) {
+        db.delete(DATABASE_TABLE, COLS[0] + "=?", new String[]{String.valueOf(id)});
     }
 }
