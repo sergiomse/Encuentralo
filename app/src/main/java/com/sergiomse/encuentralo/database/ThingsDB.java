@@ -113,4 +113,19 @@ public class ThingsDB {
 
         return things;
     }
+
+    public Thing getThingById(long id) {
+        Cursor c = db.query(DATABASE_TABLE, COLS, COLS[0] + "=?", new String[]{String.valueOf(id)}, null, null, null);
+        Thing thing = null;
+        if(c.moveToNext()) {
+            thing = new Thing();
+            thing.setId(c.getLong(0));
+            thing.setImagePath(c.getString(1));
+            thing.setTags(c.getString(2));
+            thing.setLocation(c.getString(3));
+            thing.setModifDate(new Date(Long.parseLong(c.getString(4))));
+        }
+
+        return thing;
+    }
 }

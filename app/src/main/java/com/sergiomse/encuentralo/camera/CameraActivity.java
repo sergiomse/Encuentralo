@@ -1,10 +1,13 @@
 package com.sergiomse.encuentralo.camera;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,6 +30,7 @@ public class CameraActivity extends AppCompatActivity {
 
     private static final String TAG = CameraActivity.class.getSimpleName();
 
+    private DisplayMetrics dm;
     private Camera mCamera;
     private CameraPreview mPreview;
     private String photoFile;
@@ -35,6 +39,9 @@ public class CameraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+
+        // Get display metrics
+        dm = getResources().getDisplayMetrics();
 
         // Create an instance of Camera
         mCamera = getCameraInstance();
@@ -138,12 +145,51 @@ public class CameraActivity extends AppCompatActivity {
                 Log.d(TAG, "Error accessing file: " + e.getMessage());
             }
 
+            saveThumbnailPhoto();
+
             Intent intent = new Intent(CameraActivity.this, PhotoLocationActivity.class);
             intent.putExtra("photoFile", photoFile);
             intent.putExtra("state", PhotoLocationActivity.NEW_STATE);
             startActivity(intent);
         }
     };
+
+    private void saveThumbnailPhoto() {
+        Bitmap bitmap = BitmapFactory.decodeFile(photoFile);
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        double ratioPhoto = width / (double) height;
+        int newWidth = 0;
+        int newHeight = 0;
+        //TODO Use constants instead of hardcoded 100 px
+        if(width > height) {
+            newWidth = (int) (100 * dm.density);
+            newHeight = (int) (newWidth / ratioPhoto);
+        } else {
+            newHeight = (int) (100 * dm.density);
+            newWidth = (int) (newHeight * ratioPhoto);
+        }
+        Bitmap outBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, false);
+        //TODO Refactor to use global file name without extension or two variables (one for normal picture and another for thumbnail)
+        String thumbFile = photoFile.substring(0, photoFile.lastIndexOf("."));
+        thumbFile += "_THUMB.jpg";
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(thumbFile);
+            outBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }  finally {
+            try {
+                if (fos != null) {
+                    fos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
 
     private static File getOutputMediaFile(){
         // To be safe, you should check that the SDCard is mounted

@@ -36,7 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ThingsAdapter.OnThingItemClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         dm = getResources().getDisplayMetrics();
-        //calculateBestResoultion();
 
         buttonsLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (150 * dm.density));
         buttonsLayout = (MainButtonsView) findViewById(R.id.buttonsLayout);
@@ -87,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 buttonsLayout.setLayoutParams(buttonsLayoutParams);
             }
         });
+
     }
 
     @Override
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         List<Thing> things = db.getThingsOrderedByDate();
         db.cleanup();
 
-        adapter = new ThingsAdapter(things, dm);
+        adapter = new ThingsAdapter(things, dm, this);
         recyclerView.setAdapter(adapter);
 
     }
@@ -107,23 +107,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void dispatchTakePictureIntent() {
-//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-//            // Create the File where the photo should go
-//            photoFile = null;
-//            try {
-//                photoFile = createImageFile();
-//            } catch (IOException ex) {
-//                // Error occurred while creating the File
-//                Log.e(TAG, "Exception creating photo file:" + ex.getMessage());
-//                return;
-//            }
-//            // Continue only if the File was successfully created
-//            if (photoFile != null) {
-//                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
-//                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-//            }
-//        }
 
         if(!checkCameraHardware()) {
             Toast.makeText(this, "No hay cámaras disponibles", Toast.LENGTH_LONG).show();
@@ -144,11 +127,6 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     }
-
-
-
-
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -175,39 +153,13 @@ public class MainActivity extends AppCompatActivity {
         Bitmap out = Bitmap.createScaledBitmap(bitmap, 320, 480, false);
     }
 
-    private File createImageFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = Environment.getExternalStorageDirectory();
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
+    @Override
+    public void onThingItemClick(long id) {
+        Log.d(TAG, "Click in ThingsAdapter ViewHolder");
 
-        // Save a file: path for use with ACTION_VIEW intents
-//        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
-        return image;
+        Intent photoLocationIntent = new Intent(this, PhotoLocationActivity.class);
+        photoLocationIntent.putExtra("state", PhotoLocationActivity.VIEW_STATE);
+        photoLocationIntent.putExtra("id", id);
+        startActivity(photoLocationIntent);
     }
-
-
-
-
-
-    @TargetApi(21)
-    public void getBackCameraResolutionListAPI21() {
-        float maxResolution = -1;
-        CameraManager cameraManager = (CameraManager) getSystemService(CAMERA_SERVICE);
-
-        try {
-            String cameraIdList[] =  cameraManager.getCameraIdList();
-        } catch (CameraAccessException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
-
-
 }

@@ -1,9 +1,11 @@
 package com.sergiomse.encuentralo.adapters;
 
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +26,11 @@ import java.util.List;
  */
 public class ThingsAdapter extends RecyclerView.Adapter<ThingsAdapter.ViewHolder> {
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+
+        private static final String TAG = ViewHolder.class.getSimpleName();
+
+        private OnThingItemClickListener listener;
 
         public RelativeLayout rootLayout;
         public ImageView imagePhoto;
@@ -39,17 +45,34 @@ public class ThingsAdapter extends RecyclerView.Adapter<ThingsAdapter.ViewHolder
             tvTags = (TextView) itemView.findViewById(R.id.tvTags);
             tvLocation = (TextView) itemView.findViewById(R.id.tvLocation);
             tvDate = (TextView) itemView.findViewById(R.id.tvDate);
+            itemView.setOnClickListener(this);
+        }
+
+        public void setOnThingItemClickListener(OnThingItemClickListener listener) {
+            this.listener = listener;
+        }
+
+        @Override
+        public void onClick(View v) {
+            listener.onThingItemClick((Long) rootLayout.getTag());
         }
     }
 
+    public interface OnThingItemClickListener {
+        void onThingItemClick(long id);
+    }
+
+
     private DisplayMetrics dm;
     private SimpleDateFormat sdf;
+    private OnThingItemClickListener listener;
 
     private List<Thing> things;
 
-    public ThingsAdapter(List<Thing> things, DisplayMetrics dm) {
+    public ThingsAdapter(List<Thing> things, DisplayMetrics dm, OnThingItemClickListener listener) {
         this.things = things;
         this.dm = dm;
+        this.listener = listener;
 
         sdf = new SimpleDateFormat("'El 'd' de 'MMM' de 'yyyy' a las 'HH:mm");
     }
@@ -64,26 +87,31 @@ public class ThingsAdapter extends RecyclerView.Adapter<ThingsAdapter.ViewHolder
 
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.recyclerview_things, viewGroup, false);
-        // set the view's size, margins, paddings and layout parameters
+
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
+        viewHolder.setOnThingItemClickListener(listener);
         if(i == 0) {
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, (int) (150 * dm.density));
             viewHolder.rootLayout.setLayoutParams(params);
+            viewHolder.rootLayout.setTag(-1);
 //            viewHolder.tvTags.setText("");
         } else {
             Thing thing = things.get(i - 1);
+            viewHolder.rootLayout.setTag(thing.getId());
             viewHolder.tvTags.setText(thing.getTags());
             viewHolder.tvLocation.setText(thing.getLocation());
             viewHolder.tvDate.setText(sdf.format(thing.getModifDate()));
 
             File imgFile = new File(thing.getImagePath());
             if(imgFile.exists()){
-                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                String thumbFile = imgFile.getAbsolutePath().substring(0, imgFile.getAbsolutePath().lastIndexOf("."));
+                thumbFile += "_THUMB.jpg";
+                Bitmap myBitmap = BitmapFactory.decodeFile(thumbFile);
                 viewHolder.imagePhoto.setImageBitmap(myBitmap);
             }
         }

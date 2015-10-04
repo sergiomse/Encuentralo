@@ -57,10 +57,28 @@ public class PhotoLocationActivity extends AppCompatActivity {
 
 
         Intent intent = getIntent();
-        photoFile = new File( (String) intent.getExtras().get("photoFile"));
         state = intent.getIntExtra("state", 0);
-
         setState();
+        switch (state) {
+            case NEW_STATE:
+                photoFile = new File( (String) intent.getExtras().get("photoFile"));
+                break;
+            case VIEW_STATE:
+                long id = intent.getLongExtra("id", -1);
+
+                ThingsDB db = new ThingsDB(this);
+                Thing thing = db.getThingById(id);
+                db.cleanup();
+
+                photoFile = new File(thing.getImagePath());
+                etTags.setText(thing.getTags());
+                etLocation.setText(thing.getLocation());
+                break;
+        }
+
+
+
+
 
 //        setPic();
         Bitmap bitmap = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
@@ -123,9 +141,7 @@ public class PhotoLocationActivity extends AppCompatActivity {
                 break;
             case NEW_STATE:
                 photoFile.delete();
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                returnToMainActivity();
                 break;
         }
     }
@@ -165,10 +181,14 @@ public class PhotoLocationActivity extends AppCompatActivity {
     public void buttonCancelClick(View view) {
         if(state == NEW_STATE) {
             photoFile.delete();
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+            returnToMainActivity();
         }
+    }
+
+    private void returnToMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     public void buttonSaveClick(View view) {
@@ -186,7 +206,7 @@ public class PhotoLocationActivity extends AppCompatActivity {
         db.insertThing(thing);
         db.cleanup();
 
-        finish();
+        returnToMainActivity();
     }
 
     private boolean checkValidations() {
@@ -201,25 +221,4 @@ public class PhotoLocationActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_photo_location, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 }
