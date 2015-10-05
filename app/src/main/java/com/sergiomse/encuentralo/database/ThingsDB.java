@@ -116,8 +116,8 @@ public class ThingsDB {
     }
 
     public Thing getThingById(long id) {
-        Cursor c = db.query(DATABASE_TABLE, COLS, COLS[0] + "=?", new String[]{String.valueOf(id)}, null, null, null);
         Thing thing = null;
+        Cursor c = db.query(DATABASE_TABLE, COLS, COLS[0] + "=?", new String[]{String.valueOf(id)}, null, null, null);
         if(c.moveToNext()) {
             thing = new Thing();
             thing.setId(c.getLong(0));
@@ -132,5 +132,14 @@ public class ThingsDB {
 
     public void deleteThing(long id) {
         db.delete(DATABASE_TABLE, COLS[0] + "=?", new String[]{String.valueOf(id)});
+    }
+
+    public void updateThing(Thing thing) {
+        ContentValues values = new ContentValues();
+        values.put(COLS[1], thing.getImagePath());
+        values.put(COLS[2], thing.getTags());
+        values.put(COLS[3], thing.getLocation());
+        values.put(COLS[4], String.valueOf(thing.getModifDate().getTime()));
+        db.update(DATABASE_TABLE, values, COLS[0] + "=?", new String[]{String.valueOf(thing.getId())});
     }
 }

@@ -99,17 +99,6 @@ public class PhotoLocationActivity extends AppCompatActivity {
         displayButtonsByState();
     }
 
-    private void changeState(int newState) {
-        switch (newState) {
-            case VIEW_STATE:
-                etTags.setEnabled(false);
-                etLocation.setEnabled(false);
-                state = VIEW_STATE;
-                break;
-        }
-        displayButtonsByState();
-    }
-
     private void displayButtonsByState() {
         switch (state) {
             case VIEW_STATE:
@@ -136,11 +125,8 @@ public class PhotoLocationActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         switch (state) {
-            case VIEW_STATE:
+            case VIEW_STATE | EDIT_STATE:
                 super.onBackPressed();
-                break;
-            case EDIT_STATE:
-                changeState(VIEW_STATE);
                 break;
             case NEW_STATE:
                 photoFile.delete();
@@ -197,13 +183,16 @@ public class PhotoLocationActivity extends AppCompatActivity {
     }
 
     public void buttonEditClick(View view) {
-
+        state = EDIT_STATE;
+        setState();
     }
 
     public void buttonCancelClick(View view) {
         if(state == NEW_STATE) {
             photoFile.delete();
             returnToMainActivity();
+        } else {
+            finish();
         }
     }
 
@@ -218,15 +207,28 @@ public class PhotoLocationActivity extends AppCompatActivity {
             return;
         }
 
-        Thing thing = new Thing();
-        thing.setImagePath(photoFile.getAbsolutePath());
-        thing.setTags(etTags.getText().toString());
-        thing.setLocation(etLocation.getText().toString());
-        thing.setModifDate(new Date());
+        if(state == NEW_STATE) {
+            Thing thing = new Thing();
+            thing.setImagePath(photoFile.getAbsolutePath());
+            thing.setTags(etTags.getText().toString());
+            thing.setLocation(etLocation.getText().toString());
+            thing.setModifDate(new Date());
 
-        ThingsDB db = new ThingsDB(this);
-        db.insertThing(thing);
-        db.cleanup();
+            ThingsDB db = new ThingsDB(this);
+            db.insertThing(thing);
+            db.cleanup();
+        } else {
+            Thing thing = new Thing();
+            thing.setId(thingId);
+            thing.setImagePath(photoFile.getAbsolutePath());
+            thing.setTags(etTags.getText().toString());
+            thing.setLocation(etLocation.getText().toString());
+            thing.setModifDate(new Date());
+
+            ThingsDB db = new ThingsDB(this);
+            db.updateThing(thing);
+            db.cleanup();
+        }
 
         returnToMainActivity();
     }
