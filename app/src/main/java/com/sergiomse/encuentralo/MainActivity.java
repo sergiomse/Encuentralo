@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements ThingsAdapter.OnT
 
     private MainButtonsView buttonsLayout;
     private FrameLayout.LayoutParams buttonsLayoutParams;
+    private Toolbar toolbar;
 
     private DisplayMetrics dm;
     private int scrollY;
@@ -67,6 +69,10 @@ public class MainActivity extends AppCompatActivity implements ThingsAdapter.OnT
 
         buttonsLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (150 * dm.density));
         buttonsLayout = (MainButtonsView) findViewById(R.id.buttonsLayout);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.inflateMenu(R.menu.main_menu);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
@@ -161,5 +167,17 @@ public class MainActivity extends AppCompatActivity implements ThingsAdapter.OnT
         photoLocationIntent.putExtra("state", PhotoLocationActivity.VIEW_STATE);
         photoLocationIntent.putExtra("id", id);
         startActivity(photoLocationIntent);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.searchMenuButton:
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
