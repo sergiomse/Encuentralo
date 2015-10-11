@@ -8,6 +8,8 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +18,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.sergiomse.encuentralo.adapters.TagsAdapter;
+import com.sergiomse.encuentralo.adapters.ThingsAdapter;
 import com.sergiomse.encuentralo.database.ThingsDB;
 import com.sergiomse.encuentralo.model.Thing;
 
@@ -36,6 +40,8 @@ public class PhotoLocationActivity extends AppCompatActivity {
     private LinearLayout scrollWrapLayout;
     private ImageView imagePhoto;
     private EditText etTags;
+    private RecyclerView tagsRecyclerView;
+    private TagsAdapter adapter;
     private EditText etLocation;
     private Button btnDelete;
     private Button btnEdit;
@@ -52,6 +58,7 @@ public class PhotoLocationActivity extends AppCompatActivity {
         scrollWrapLayout    = (LinearLayout) findViewById(R.id.scrollWrapLayout);
         imagePhoto          = (ImageView) findViewById(R.id.imagePhoto);
         etTags              = (EditText) findViewById(R.id.etTags);
+        tagsRecyclerView    = (RecyclerView) findViewById(R.id.recyclerView);
         etLocation          = (EditText) findViewById(R.id.etLocation);
         btnDelete           = (Button) findViewById(R.id.btnDelete);
         btnEdit             = (Button) findViewById(R.id.btnEdit);
@@ -81,7 +88,11 @@ public class PhotoLocationActivity extends AppCompatActivity {
 
 
 
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        tagsRecyclerView.setLayoutManager(layoutManager);
 
+        adapter = new TagsAdapter(this);
+        tagsRecyclerView.setAdapter(adapter);
 
 //        setPic();
         Bitmap bitmap = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
