@@ -24,7 +24,9 @@ import com.sergiomse.encuentralo.database.ThingsDB;
 import com.sergiomse.encuentralo.model.Thing;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class PhotoLocationActivity extends AppCompatActivity {
 
@@ -91,7 +93,10 @@ public class PhotoLocationActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         tagsRecyclerView.setLayoutManager(layoutManager);
 
-        adapter = new TagsAdapter(this);
+        List<String> tags = new ArrayList<>();
+        tags.add(photoFile.getAbsolutePath());
+        tags.add("hola");
+        adapter = new TagsAdapter(this, tags);
         tagsRecyclerView.setAdapter(adapter);
 
 //        setPic();

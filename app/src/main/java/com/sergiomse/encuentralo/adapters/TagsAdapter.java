@@ -8,6 +8,7 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,55 +25,22 @@ import java.util.List;
  */
 public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         private static final String TAG = ViewHolder.class.getSimpleName();
 
-        private OnThingItemClickListener listener;
-
-        public RelativeLayout rootLayout;
-        public ImageView imagePhoto;
-        public TextView tvTags;
-        public TextView tvLocation;
-        public TextView tvDate;
+        public EditText etTag;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            rootLayout = (RelativeLayout) itemView;
-            imagePhoto = (ImageView) itemView.findViewById(R.id.imagePhoto);
-            tvTags = (TextView) itemView.findViewById(R.id.tvTags);
-            tvLocation = (TextView) itemView.findViewById(R.id.tvLocation);
-            tvDate = (TextView) itemView.findViewById(R.id.tvDate);
-            itemView.setOnClickListener(this);
-        }
-
-        public void setOnThingItemClickListener(OnThingItemClickListener listener) {
-            this.listener = listener;
-        }
-
-        @Override
-        public void onClick(View v) {
-            listener.onThingItemClick((Long) rootLayout.getTag());
+            etTag = (EditText) itemView.findViewById(R.id.etTag);
         }
     }
 
-    public interface OnThingItemClickListener {
-        void onThingItemClick(long id);
-    }
+    private List<String> tags;
 
-
-    private DisplayMetrics dm;
-    private SimpleDateFormat sdf;
-    private OnThingItemClickListener listener;
-
-    private List<Thing> things;
-
-    public TagsAdapter(Context ctx) {
-        this.things = things;
-        this.dm = dm;
-        this.listener = listener;
-
-        sdf = new SimpleDateFormat("'El 'd' de 'MMM' de 'yyyy' a las 'HH:mm");
+    public TagsAdapter(Context ctx, List<String> tags) {
+        this.tags = tags;
     }
 
     @Override
@@ -84,7 +52,7 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
 
         View v = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.recyclerview_things, viewGroup, false);
+                .inflate(R.layout.tag_recyclerview, viewGroup, false);
 
         ViewHolder vh = new ViewHolder(v);
         return vh;
@@ -92,31 +60,24 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        viewHolder.setOnThingItemClickListener(listener);
+        // image
         if(i == 0) {
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, (int) (150 * dm.density));
-            viewHolder.rootLayout.setLayoutParams(params);
-            viewHolder.rootLayout.setTag(-1);
-//            viewHolder.tvTags.setText("");
-        } else {
-            Thing thing = things.get(i - 1);
-            viewHolder.rootLayout.setTag(thing.getId());
-            viewHolder.tvTags.setText(thing.getTags());
-            viewHolder.tvLocation.setText(thing.getLocation());
-            viewHolder.tvDate.setText(sdf.format(thing.getModifDate()));
 
-            File imgFile = new File(thing.getImagePath());
-            if(imgFile.exists()){
-                String thumbFile = imgFile.getAbsolutePath().substring(0, imgFile.getAbsolutePath().lastIndexOf("."));
-                thumbFile += "_THUMB.jpg";
-                Bitmap myBitmap = BitmapFactory.decodeFile(thumbFile);
-                viewHolder.imagePhoto.setImageBitmap(myBitmap);
-            }
+
+        }
+        // location
+        else if (i == tags.size() - 1) {
+
+        }
+        // tags
+        else {
+            viewHolder.etTag.setText(tags.get(i - 1));
         }
     }
 
     @Override
     public int getItemCount() {
-        return things.size() + 1;
+        //included image and location
+        return tags.size() + 2;
     }
 }
