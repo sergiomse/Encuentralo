@@ -18,6 +18,13 @@
             android:textSize="24sp" />
     </android.support.v7.widget.Toolbar>
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:id="@+id/ivButtonsSeparator"
+        android:layout_above="@+id/buttonsLayout"
+        android:src="#000" />
+
     <RelativeLayout
         android:id="@+id/buttonsLayout"
         android:layout_width="match_parent"
@@ -70,8 +77,10 @@
         android:id="@+id/scrollVient"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/buttonsLayout"
-        android:layout_below="@+id/toolbar">
+        android:layout_above="@+id/ivButtonsSeparator"
+        android:layout_below="@+id/toolbar"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
         <LinearLayout
             android:id="@+id/scrollWrapLayout"

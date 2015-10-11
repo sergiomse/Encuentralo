@@ -10,9 +10,16 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 
+import com.sergiomse.encuentralo.database.ThingsDB;
+import com.sergiomse.encuentralo.model.Thing;
+
+import java.util.List;
+
 public class SearchActivity extends AppCompatActivity {
 
     private EditText etSearch;
+
+    private List<Thing> things;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +27,10 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        ThingsDB db = new ThingsDB(this);
+        things = db.getThingsOrderedByDate();
+        db.cleanup();
 
         etSearch = (EditText) findViewById(R.id.etSearch);
         etSearch.addTextChangedListener(new TextWatcher() {
