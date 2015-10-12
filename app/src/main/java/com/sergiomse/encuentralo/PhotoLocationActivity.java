@@ -6,12 +6,18 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,11 +27,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
+import com.sergiomse.encuentralo.adapters.OnTagsAdapterChange;
 import com.sergiomse.encuentralo.adapters.TagsAdapter;
 import com.sergiomse.encuentralo.adapters.ThingsAdapter;
 import com.sergiomse.encuentralo.database.ThingsDB;
 import com.sergiomse.encuentralo.model.Thing;
+import com.sergiomse.encuentralo.utils.Colors;
+import com.sergiomse.encuentralo.views.TagEditView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -44,8 +54,8 @@ public class PhotoLocationActivity extends AppCompatActivity {
     private long thingId;
 
     private LinearLayout scrollWrapLayout;
-    private ImageView imagePhoto;
-    private EditText etTags;
+    private ImageView ivPhoto;
+    private List<TagEditView> tevTags;
     private RecyclerView tagsRecyclerView;
     private TagsAdapter adapter;
     private EditText etLocation;
@@ -61,9 +71,9 @@ public class PhotoLocationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_location);
 
-//        scrollWrapLayout    = (LinearLayout) findViewById(R.id.scrollWrapLayout);
-//        imagePhoto          = (ImageView) findViewById(R.id.imagePhoto);
-//        etTags              = (EditText) findViewById(R.id.etTags);
+        scrollWrapLayout    = (LinearLayout) findViewById(R.id.scrollWrapLayout);
+        ivPhoto          = (ImageView) findViewById(R.id.ivPhoto);
+
         tagsRecyclerView    = (RecyclerView) findViewById(R.id.recyclerView);
 //        etLocation          = (EditText) findViewById(R.id.etLocation);
         btnDelete           = (Button) findViewById(R.id.btnDelete);
@@ -87,38 +97,118 @@ public class PhotoLocationActivity extends AppCompatActivity {
                 db.cleanup();
 
                 photoFile = new File(thing.getImagePath());
-                etTags.setText(thing.getTags());
+//                etTags.setText(thing.getTags());
                 etLocation.setText(thing.getLocation());
                 break;
         }
 
 
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        tagsRecyclerView.setLayoutManager(layoutManager);
-
-        List<String> tags = new ArrayList<>();
-        tags.add("hola");
-
-        // get the screen height to calculate image height (0.3 * screenHeight)
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+//        tagsRecyclerView.setLayoutManager(layoutManager);
+//
+//        List<String> tags = new ArrayList<>();
+//        tags.add("hola");
+//
+//        // get the screen height to calculate image height (0.3 * screenHeight)
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-        int height = size.y;
+//
+//        adapter = new TagsAdapter(this, photoFile.getAbsolutePath(), tags, "caca", (int) (0.3 * height));
+//        tagsRecyclerView.setAdapter(adapter);
 
-        adapter = new TagsAdapter(this, photoFile.getAbsolutePath(), tags, "caca", (int) (0.3 * height));
-        tagsRecyclerView.setAdapter(adapter);
+        ivPhoto.setImageBitmap(composeImage((int) (0.3 * size.y)));
+
+        TagEditView tagEditView = new TagEditView(this);
+        scrollWrapLayout.addView(tagEditView);
+    }
+
+    //TODO control the width of the image so no exceed the layout width
+    private Bitmap composeImage(int maxHeight) {
+        Bitmap source = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+        int rgbAvg[] = getAverageColorRGB(source);
+        Log.d(TAG, "Avg color = " + rgbAvg);
+        String nearestColor = Colors.nearestMaterialColor(Color.rgb(rgbAvg[0], rgbAvg[1], rgbAvg[2]));
+        Log.d(TAG, "nearestColor = " + nearestColor);
+        int complColor = Colors.getMaterialColor(Colors.complementMaterialColor(nearestColor));
+        Log.d(TAG, "complColor = " + Colors.complementMaterialColor(nearestColor));
+
+        double ratio = source.getWidth() / (double) source.getHeight();
+
+        int newWidth = (int) (ratio * maxHeight);
+        Matrix matrix = new Matrix();
+        matrix.postTranslate(5, 5);
+        matrix.postScale(((float) newWidth) / source.getWidth(), ((float) maxHeight) / source.getHeight());
+
+        //TODO use dp instead of px in the image border
+        Bitmap imageBitmap = Bitmap.createBitmap(newWidth + 10, maxHeight + 10, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(imageBitmap);
+        Paint paintComp = new Paint();
+        paintComp.setStyle(Paint.Style.FILL);
+        paintComp.setAntiAlias(true);
+        paintComp.setColor(complColor);
+        Path path = getRoundedRectPath(0, 0, canvas.getWidth(), canvas.getHeight(), 5, 5);
+        canvas.drawPath(path, paintComp);
+        canvas.drawBitmap(source, matrix, null);
+
+        return imageBitmap;
+    }
+
+
+    //TODO Extract all this methods to a new utilities class
+    private Path getRoundedRectPath(int left, int top, int right, int bottom, int rx, int ry) {
+        int width = right - left;
+        int height = bottom - top;
+        Path path = new Path();
+        path.moveTo(rx, 0);
+        path.lineTo(width - rx, 0);
+        path.quadTo(width, 0, width, ry);
+        path.lineTo(width, height - ry);
+        path.quadTo(width, height, width - rx, height);
+        path.lineTo(rx, height);
+        path.quadTo(0, height, 0, height - ry);
+        path.lineTo(0, ry);
+        path.quadTo(0, 0, rx, 0);
+        return path;
+    }
+
+    private int[] getAverageColorRGB(Bitmap bitmap) {
+        final int width = bitmap.getWidth();
+        final int height = bitmap.getHeight();
+        int size = width * height;
+        int pixelColor;
+        int r, g, b;
+        r = g = b = 0;
+        for (int x = 0; x < width; ++x) {
+            for (int y = 0; y < height; ++y) {
+                pixelColor = bitmap.getPixel(x, y);
+                if (pixelColor == 0) {
+                    size--;
+                    continue;
+                }
+                r += Color.red(pixelColor);
+                g += Color.green(pixelColor);
+                b += Color.blue(pixelColor);
+            }
+        }
+        r /= size;
+        g /= size;
+        b /= size;
+        return new int[] {
+                r, g, b
+        };
     }
 
     private void setState() {
-        if(state == VIEW_STATE) {
-            etTags.setEnabled(false);
-            etLocation.setEnabled(false);
-        } else if(state == EDIT_STATE) {
-            etTags.setEnabled(true);
-            etLocation.setEnabled(true);
-        }
-        displayButtonsByState();
+//        if(state == VIEW_STATE) {
+//            etTags.setEnabled(false);
+//            etLocation.setEnabled(false);
+//        } else if(state == EDIT_STATE) {
+//            etTags.setEnabled(true);
+//            etLocation.setEnabled(true);
+//        }
+//        displayButtonsByState();
     }
 
     private void displayButtonsByState() {
@@ -157,29 +247,29 @@ public class PhotoLocationActivity extends AppCompatActivity {
         }
     }
 
-    private void setPic() {
-        // Get the dimensions of the View
-        int targetW = scrollWrapLayout.getWidth();
-        int targetH = 500;
-
-        // Get the dimensions of the bitmap
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(photoFile.getAbsolutePath(), bmOptions);
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
-
-        // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
-
-        // Decode the image file into a Bitmap sized to fill the View
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-        bmOptions.inPurgeable = true;
-
-        Bitmap bitmap = BitmapFactory.decodeFile(photoFile.getAbsolutePath(), bmOptions);
-        imagePhoto.setImageBitmap(bitmap);
-    }
+//    private void setPic() {
+//        // Get the dimensions of the View
+//        int targetW = scrollWrapLayout.getWidth();
+//        int targetH = 500;
+//
+//        // Get the dimensions of the bitmap
+//        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+//        bmOptions.inJustDecodeBounds = true;
+//        BitmapFactory.decodeFile(photoFile.getAbsolutePath(), bmOptions);
+//        int photoW = bmOptions.outWidth;
+//        int photoH = bmOptions.outHeight;
+//
+//        // Determine how much to scale down the image
+//        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+//
+//        // Decode the image file into a Bitmap sized to fill the View
+//        bmOptions.inJustDecodeBounds = false;
+//        bmOptions.inSampleSize = scaleFactor;
+//        bmOptions.inPurgeable = true;
+//
+//        Bitmap bitmap = BitmapFactory.decodeFile(photoFile.getAbsolutePath(), bmOptions);
+//        ivPhoto.setImageBitmap(bitmap);
+//    }
 
     public void buttonDeleteClick(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -232,7 +322,7 @@ public class PhotoLocationActivity extends AppCompatActivity {
         if(state == NEW_STATE) {
             Thing thing = new Thing();
             thing.setImagePath(photoFile.getAbsolutePath());
-            thing.setTags(etTags.getText().toString());
+//            thing.setTags(etTags.getText().toString());
             thing.setLocation(etLocation.getText().toString());
             thing.setModifDate(new Date());
 
@@ -243,7 +333,7 @@ public class PhotoLocationActivity extends AppCompatActivity {
             Thing thing = new Thing();
             thing.setId(thingId);
             thing.setImagePath(photoFile.getAbsolutePath());
-            thing.setTags(etTags.getText().toString());
+//            thing.setTags(etTags.getText().toString());
             thing.setLocation(etLocation.getText().toString());
             thing.setModifDate(new Date());
 
@@ -256,9 +346,9 @@ public class PhotoLocationActivity extends AppCompatActivity {
     }
 
     private boolean checkValidations() {
-        if(etTags.getText().toString().trim().isEmpty()) {
-            return false;
-        }
+//        if(etTags.getText().toString().trim().isEmpty()) {
+//            return false;
+//        }
         return true;
     }
 

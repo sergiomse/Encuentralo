@@ -18,13 +18,6 @@
             android:textSize="24sp" />
     </android.support.v7.widget.Toolbar>
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:id="@+id/ivButtonsSeparator"
-        android:layout_above="@+id/buttonsLayout"
-        android:src="#000" />
-
     <RelativeLayout
         android:id="@+id/buttonsLayout"
         android:layout_width="match_parent"
@@ -73,17 +66,35 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/ivButtonsSeparator"
+        android:layout_height="1dp"
+        android:id="@+id/ivButtonsSeparator"
+        android:layout_above="@+id/buttonsLayout"
+        android:src="#000" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView"
         android:layout_below="@+id/toolbar"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:layout_above="@+id/ivButtonsSeparator" >
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/scrollWrapLayout"
+            android:orientation="vertical">
 
-    </android.support.v7.widget.RecyclerView>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ivPhoto"
+                android:src="@drawable/icon_search"
+                android:layout_gravity="center_horizontal"
+                android:background="@android:drawable/dialog_holo_light_frame" />
+        </LinearLayout>
+    </ScrollView>
 
 
 </RelativeLayout>

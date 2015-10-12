@@ -12,9 +12,27 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/imageView4"
+        android:src="@drawable/tag_bullet"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="16dp" />
+
+    <ImageView
+        android:layout_width="44dp"
+        android:layout_height="wrap_content"
         android:id="@+id/ivTagRight"
+        android:layout_alignParentRight="true"
         android:src="@drawable/tag_bk_rigth"
-        android:layout_alignParentRight="true" />
+        android:scaleType="fitXY" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButton"
+        android:layout_centerVertical="true"
+        android:src="@drawable/tag_delete"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="8dp" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -22,5 +40,7 @@
         android:id="@+id/etTag"
         android:layout_toRightOf="@+id/ivTagLeft"
         android:layout_toLeftOf="@+id/ivTagRight"
-        android:background="@drawable/tag_bk_center" />
+        android:background="@drawable/tag_bk_center"
+        android:maxLines="1"
+        android:lines="1" />
 </RelativeLayout>
