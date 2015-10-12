@@ -1,18 +1,22 @@
 package com.sergiomse.encuentralo;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -57,11 +61,11 @@ public class PhotoLocationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_location);
 
-        scrollWrapLayout    = (LinearLayout) findViewById(R.id.scrollWrapLayout);
-        imagePhoto          = (ImageView) findViewById(R.id.imagePhoto);
-        etTags              = (EditText) findViewById(R.id.etTags);
+//        scrollWrapLayout    = (LinearLayout) findViewById(R.id.scrollWrapLayout);
+//        imagePhoto          = (ImageView) findViewById(R.id.imagePhoto);
+//        etTags              = (EditText) findViewById(R.id.etTags);
         tagsRecyclerView    = (RecyclerView) findViewById(R.id.recyclerView);
-        etLocation          = (EditText) findViewById(R.id.etLocation);
+//        etLocation          = (EditText) findViewById(R.id.etLocation);
         btnDelete           = (Button) findViewById(R.id.btnDelete);
         btnEdit             = (Button) findViewById(R.id.btnEdit);
         btnCancel           = (Button) findViewById(R.id.btnCancel);
@@ -94,14 +98,16 @@ public class PhotoLocationActivity extends AppCompatActivity {
         tagsRecyclerView.setLayoutManager(layoutManager);
 
         List<String> tags = new ArrayList<>();
-        tags.add(photoFile.getAbsolutePath());
         tags.add("hola");
-        adapter = new TagsAdapter(this, tags);
-        tagsRecyclerView.setAdapter(adapter);
 
-//        setPic();
-        Bitmap bitmap = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
-        imagePhoto.setImageBitmap(bitmap);
+        // get the screen height to calculate image height (0.3 * screenHeight)
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int height = size.y;
+
+        adapter = new TagsAdapter(this, photoFile.getAbsolutePath(), tags, "caca", (int) (0.3 * height));
+        tagsRecyclerView.setAdapter(adapter);
     }
 
     private void setState() {

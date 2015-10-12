@@ -73,60 +73,17 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <ScrollView
-        android:id="@+id/scrollVient"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_above="@+id/ivButtonsSeparator"
         android:layout_below="@+id/toolbar"
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
 
-        <LinearLayout
-            android:id="@+id/scrollWrapLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/imagePhoto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scaleType="fitCenter" />
-
-            <TextView
-                android:id="@+id/textVent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Etiquetas"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
-            <EditText
-                android:id="@+id/etTags"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="none">
-
-            </android.support.v7.widget.RecyclerView>
-
-            <TextView
-                android:id="@+id/textVient"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Localización"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
-            <EditText
-                android:id="@+id/etLocation"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </LinearLayout>
-    </ScrollView>
+    </android.support.v7.widget.RecyclerView>
 
 
 </RelativeLayout>
