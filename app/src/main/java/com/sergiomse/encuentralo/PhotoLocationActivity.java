@@ -1,7 +1,5 @@
 package com.sergiomse.encuentralo;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,32 +13,21 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Display;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 
-import com.sergiomse.encuentralo.adapters.OnTagsAdapterChange;
-import com.sergiomse.encuentralo.adapters.TagsAdapter;
-import com.sergiomse.encuentralo.adapters.ThingsAdapter;
 import com.sergiomse.encuentralo.database.ThingsDB;
 import com.sergiomse.encuentralo.model.Thing;
 import com.sergiomse.encuentralo.utils.Colors;
-import com.sergiomse.encuentralo.views.TagEditView;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class PhotoLocationActivity extends AppCompatActivity {
 
@@ -55,9 +42,9 @@ public class PhotoLocationActivity extends AppCompatActivity {
 
     private LinearLayout scrollWrapLayout;
     private ImageView ivPhoto;
-    private List<TagEditView> tevTags;
+//    private List<TagEditView> tevTags;
     private RecyclerView tagsRecyclerView;
-    private TagsAdapter adapter;
+//    private TagsAdapter adapter;
     private EditText etLocation;
     private Button btnDelete;
     private Button btnEdit;
@@ -120,8 +107,6 @@ public class PhotoLocationActivity extends AppCompatActivity {
 
         ivPhoto.setImageBitmap(composeImage((int) (0.3 * size.y)));
 
-        TagEditView tagEditView = new TagEditView(this);
-        scrollWrapLayout.addView(tagEditView);
     }
 
     //TODO control the width of the image so no exceed the layout width

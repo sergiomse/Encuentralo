@@ -2,4 +2,5 @@
 <resources>
     <color name="cyan500">#00BCD4</color>
     <color name="cyan200">#80DEEA</color>
+    <color name="secondary_text">#DD2C00</color>
 </resources>

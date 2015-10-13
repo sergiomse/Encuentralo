@@ -3,6 +3,12 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/cyan500</item>
+        <!--<item name="android:textColorHint">@color/secondary_text</item>-->
+        <item name="colorControlActivated">@color/secondary_text</item>
+        <!-- EditText line color when EditText on-focus-->
+        <item name="colorControlHighlight">@color/secondary_text</item>
+        <!-- EditText line color when EditText  in un-focus-->
+        <!--<item name="colorControlNormal">#000</item>-->
     </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
