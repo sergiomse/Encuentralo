@@ -103,6 +103,7 @@
                 <EditText
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:id="@+id/etTags"
                     android:hint="Etiquetas"/>
             </android.support.design.widget.TextInputLayout>
 
@@ -113,6 +114,7 @@
                 <EditText
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:id="@+id/etLocation"
                     android:hint="Localización"/>
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>

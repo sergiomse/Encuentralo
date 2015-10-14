@@ -31,6 +31,22 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/etSearch"/>
+            android:id="@+id/etSearch"
+            android:maxLines="1"
+            android:inputType="text"/>
     </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/searchRecyclerView"
+        android:visibility="gone"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/noSearchItems"
+        android:gravity="center"
+        android:text="No se han encontrado elementos"
+        android:textSize="22sp"/>
 </LinearLayout>

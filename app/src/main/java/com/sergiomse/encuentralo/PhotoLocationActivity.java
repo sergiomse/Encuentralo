@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.sergiomse.encuentralo.database.ThingsDB;
 import com.sergiomse.encuentralo.model.Thing;
@@ -40,11 +41,8 @@ public class PhotoLocationActivity extends AppCompatActivity {
     private int state;
     private long thingId;
 
-    private LinearLayout scrollWrapLayout;
     private ImageView ivPhoto;
-//    private List<TagEditView> tevTags;
-    private RecyclerView tagsRecyclerView;
-//    private TagsAdapter adapter;
+    private EditText etTags;
     private EditText etLocation;
     private Button btnDelete;
     private Button btnEdit;
@@ -58,11 +56,9 @@ public class PhotoLocationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_location);
 
-        scrollWrapLayout    = (LinearLayout) findViewById(R.id.scrollWrapLayout);
-        ivPhoto          = (ImageView) findViewById(R.id.ivPhoto);
-
-        tagsRecyclerView    = (RecyclerView) findViewById(R.id.recyclerView);
-//        etLocation          = (EditText) findViewById(R.id.etLocation);
+        ivPhoto             = (ImageView) findViewById(R.id.ivPhoto);
+        etTags              = (EditText) findViewById(R.id.etTags);
+        etLocation          = (EditText) findViewById(R.id.etLocation);
         btnDelete           = (Button) findViewById(R.id.btnDelete);
         btnEdit             = (Button) findViewById(R.id.btnEdit);
         btnCancel           = (Button) findViewById(R.id.btnCancel);
@@ -84,27 +80,18 @@ public class PhotoLocationActivity extends AppCompatActivity {
                 db.cleanup();
 
                 photoFile = new File(thing.getImagePath());
-//                etTags.setText(thing.getTags());
+                etTags.setText(thing.getTags());
                 etLocation.setText(thing.getLocation());
                 break;
         }
 
 
 
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-//        tagsRecyclerView.setLayoutManager(layoutManager);
-//
-//        List<String> tags = new ArrayList<>();
-//        tags.add("hola");
-//
-//        // get the screen height to calculate image height (0.3 * screenHeight)
+
+        // get the screen height to calculate image height (0.3 * screenHeight)
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-//
-//        adapter = new TagsAdapter(this, photoFile.getAbsolutePath(), tags, "caca", (int) (0.3 * height));
-//        tagsRecyclerView.setAdapter(adapter);
-
         ivPhoto.setImageBitmap(composeImage((int) (0.3 * size.y)));
 
     }
@@ -307,7 +294,7 @@ public class PhotoLocationActivity extends AppCompatActivity {
         if(state == NEW_STATE) {
             Thing thing = new Thing();
             thing.setImagePath(photoFile.getAbsolutePath());
-//            thing.setTags(etTags.getText().toString());
+            thing.setTags(etTags.getText().toString());
             thing.setLocation(etLocation.getText().toString());
             thing.setModifDate(new Date());
 
@@ -318,7 +305,7 @@ public class PhotoLocationActivity extends AppCompatActivity {
             Thing thing = new Thing();
             thing.setId(thingId);
             thing.setImagePath(photoFile.getAbsolutePath());
-//            thing.setTags(etTags.getText().toString());
+            thing.setTags(etTags.getText().toString());
             thing.setLocation(etLocation.getText().toString());
             thing.setModifDate(new Date());
 
@@ -331,9 +318,10 @@ public class PhotoLocationActivity extends AppCompatActivity {
     }
 
     private boolean checkValidations() {
-//        if(etTags.getText().toString().trim().isEmpty()) {
-//            return false;
-//        }
+        if(etTags.getText().toString().trim().isEmpty()) {
+            Toast.makeText(this, "Introduzca al menos una etiqueta", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return true;
     }
 

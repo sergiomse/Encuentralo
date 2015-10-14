@@ -72,7 +72,6 @@ public class MainActivity extends AppCompatActivity implements ThingsAdapter.OnT
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.inflateMenu(R.menu.main_menu);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
@@ -170,11 +169,19 @@ public class MainActivity extends AppCompatActivity implements ThingsAdapter.OnT
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(final Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.searchMenuButton:
-
+                Intent intent = new Intent(this, SearchActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
