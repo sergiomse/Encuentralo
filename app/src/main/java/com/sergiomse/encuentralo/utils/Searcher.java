@@ -58,6 +58,21 @@ public class Searcher {
             return (this.tagIndices.size() + this.locIndices.size()) -
                     (another.tagIndices.size() + another.locIndices.size());
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            SearchItem item = (SearchItem) o;
+
+            return this.thing.getId() == item.thing.getId();
+        }
+
+        @Override
+        public int hashCode() {
+            return (int) (thing.getId() ^ (thing.getId() >>> 32));
+        }
     }
 
     private Context context;

@@ -12,6 +12,7 @@ import com.sergiomse.encuentralo.R;
 import com.sergiomse.encuentralo.utils.Searcher;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -52,6 +53,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     private List<Searcher.SearchItem> items;
 
+    public SearchAdapter() {
+        items = new ArrayList<>();
+    }
+
     public SearchAdapter(List<Searcher.SearchItem> items /*, OnThingItemClickListener listener*/) {
         this.items = items;
 //        this.listener = listener;
@@ -82,5 +87,31 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return items.get(position).getThing().getId();
+    }
+
+    public void addItem(Searcher.SearchItem item) {
+        items.add(item);
+        notifyDataSetChanged();
+    }
+
+    public void addAllItem(List<Searcher.SearchItem> items) {
+        this.items = items;
+        notifyDataSetChanged();
+    }
+
+    public void deleteItem(Searcher.SearchItem item) {
+        int index = items.indexOf(item);
+        items.remove(item);
+        notifyDataSetChanged();
+    }
+
+    public void deleteAll() {
+        items.clear();
+        notifyDataSetChanged();
     }
 }
