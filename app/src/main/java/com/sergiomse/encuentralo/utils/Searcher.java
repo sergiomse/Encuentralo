@@ -89,7 +89,7 @@ public class Searcher {
     public List<SearchItem> search(String str) {
         List<SearchItem> searchItems = new ArrayList<>();
 
-        if(str.length() < 3) {
+        if(str.length() < 2) {
             return searchItems;
         }
 
