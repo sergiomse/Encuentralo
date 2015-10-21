@@ -1,7 +1,5 @@
 package com.sergiomse.encuentralo.adapters;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +7,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sergiomse.encuentralo.R;
-import com.sergiomse.encuentralo.utils.Searcher;
+import com.sergiomse.encuentralo.searcher.Searcher2;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,13 +48,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     private OnThingItemClickListener listener;
 
-    private List<Searcher.SearchItem> items;
+    private List<Searcher2.SearchItem> items;
 
     public SearchAdapter() {
         items = new ArrayList<>();
     }
 
-    public SearchAdapter(List<Searcher.SearchItem> items /*, OnThingItemClickListener listener*/) {
+    public SearchAdapter(List<Searcher2.SearchItem> items /*, OnThingItemClickListener listener*/) {
         this.items = items;
 //        this.listener = listener;
     }
@@ -94,17 +91,17 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         return items.get(position).getThing().getId();
     }
 
-    public void addItem(Searcher.SearchItem item) {
+    public void addItem(Searcher2.SearchItem item) {
         items.add(item);
         notifyDataSetChanged();
     }
 
-    public void addAllItem(List<Searcher.SearchItem> items) {
+    public void addAllItem(List<Searcher2.SearchItem> items) {
         this.items = items;
         notifyDataSetChanged();
     }
 
-    public void deleteItem(Searcher.SearchItem item) {
+    public void deleteItem(Searcher2.SearchItem item) {
         int index = items.indexOf(item);
         items.remove(item);
         notifyDataSetChanged();

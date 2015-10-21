@@ -1,23 +1,17 @@
 package com.sergiomse.encuentralo;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.sergiomse.encuentralo.adapters.SearchAdapter;
-import com.sergiomse.encuentralo.database.ThingsDB;
-import com.sergiomse.encuentralo.model.Thing;
-import com.sergiomse.encuentralo.utils.Searcher;
+import com.sergiomse.encuentralo.searcher.Searcher2;
 import com.sergiomse.encuentralo.views.SearchLinearLayoutManager;
 
 import org.apache.commons.collections4.sequence.CommandVisitor;
@@ -31,9 +25,9 @@ public class SearchActivity extends AppCompatActivity {
 
     private EditText etSearch;
     private RecyclerView searchRecyclerView;
-    private Searcher searcher;
+    private Searcher2 searcher2;
     private TextView noSearchItems;
-    private List<Searcher.SearchItem> searchItems = new ArrayList<>();
+    private List<Searcher2.SearchItem> searchItems = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +38,7 @@ public class SearchActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Búsqueda");
 
-        searcher = new Searcher(this);
+        searcher2 = new Searcher2(this);
 
         noSearchItems = (TextView) findViewById(R.id.noSearchItems);
         searchRecyclerView = (RecyclerView) findViewById(R.id.searchRecyclerView);
@@ -66,7 +60,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String str = etSearch.getText().toString();
-                List<Searcher.SearchItem> items = searcher.search(str);
+                List<Searcher2.SearchItem> items = searcher2.search(str);
 
                 if( searchItems.isEmpty()  &&  !items.isEmpty()) {
                     //from empty to a new list
@@ -86,23 +80,23 @@ public class SearchActivity extends AppCompatActivity {
                     //from list to list
 
                     final SearchAdapter adapter = (SearchAdapter) searchRecyclerView.getAdapter();
-                    SequencesComparator<Searcher.SearchItem> sequencesComparator = new SequencesComparator<>(searchItems, items);
-                    EditScript<Searcher.SearchItem> script = sequencesComparator.getScript();
+                    SequencesComparator<Searcher2.SearchItem> sequencesComparator = new SequencesComparator<>(searchItems, items);
+                    EditScript<Searcher2.SearchItem> script = sequencesComparator.getScript();
 
-                    script.visit(new CommandVisitor<Searcher.SearchItem>() {
+                    script.visit(new CommandVisitor<Searcher2.SearchItem>() {
                         @Override
-                        public void visitInsertCommand(Searcher.SearchItem item) {
+                        public void visitInsertCommand(Searcher2.SearchItem item) {
                             System.out.println("Insert: " + item);
                             adapter.addItem(item);
                         }
 
                         @Override
-                        public void visitKeepCommand(Searcher.SearchItem item) {
+                        public void visitKeepCommand(Searcher2.SearchItem item) {
                             System.out.println("Keep: " + item);
                         }
 
                         @Override
-                        public void visitDeleteCommand(Searcher.SearchItem item) {
+                        public void visitDeleteCommand(Searcher2.SearchItem item) {
                             System.out.println("Delete: " + item);
                             adapter.deleteItem(item);
                         }
