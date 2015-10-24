@@ -13,6 +13,17 @@ public class Thing {
     private String location;
     private Date modifDate;
 
+    public Thing() {
+    }
+
+    public Thing(long id, String imagePath, String tags, String location, Date modifDate) {
+        this.id = id;
+        this.imagePath = imagePath;
+        this.tags = tags;
+        this.location = location;
+        this.modifDate = modifDate;
+    }
+
     public long getId() {
         return id;
     }

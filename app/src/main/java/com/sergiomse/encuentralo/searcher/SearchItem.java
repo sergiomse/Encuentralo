@@ -54,4 +54,14 @@ public class SearchItem {
     public void setTotalConfidence(float totalConfidence) {
         this.totalConfidence = totalConfidence;
     }
+
+    @Override
+    public String toString() {
+        return "SearchItem{" +
+                "thing=" + thing +
+                ", matches=" + matches +
+                ", exactMatches=" + exactMatches +
+                ", totalConfidence=" + totalConfidence +
+                '}';
+    }
 }

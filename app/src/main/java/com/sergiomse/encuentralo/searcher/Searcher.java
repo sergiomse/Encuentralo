@@ -22,6 +22,13 @@ public class Searcher {
         db.cleanup();
     }
 
+    public List<Thing> getThings() {
+        return things;
+    }
+
+    public List<SearchItem> getSearchItems() {
+        return searchItems;
+    }
 
     public void search(String searched) {
         String searchedWords[] = searched.split("[\\s\\n]");
