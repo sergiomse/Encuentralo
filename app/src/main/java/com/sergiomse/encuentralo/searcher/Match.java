@@ -38,4 +38,14 @@ public class Match {
     public void setConfidence(float confidence) {
         this.confidence = confidence;
     }
+
+
+    @Override
+    public String toString() {
+        return "Match{" +
+                "start=" + start +
+                ", end=" + end +
+                ", confidence=" + confidence +
+                '}';
+    }
 }

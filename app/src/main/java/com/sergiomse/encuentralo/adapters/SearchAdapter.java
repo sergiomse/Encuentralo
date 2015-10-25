@@ -1,13 +1,15 @@
 package com.sergiomse.encuentralo.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sergiomse.encuentralo.R;
-import com.sergiomse.encuentralo.searcher.Searcher2;
+import com.sergiomse.encuentralo.searcher.SearchItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +25,12 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
         private OnThingItemClickListener listener;
 
+        public LinearLayout llSearchItem;
         public TextView tvSearchedText;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            llSearchItem = (LinearLayout) itemView.findViewById(R.id.searchItem);
             tvSearchedText = (TextView) itemView.findViewById(R.id.tvSearchedText);
             itemView.setOnClickListener(this);
         }
@@ -37,7 +41,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
         @Override
         public void onClick(View v) {
-//            listener.onThingItemClick((Long) rootLayout.getTag());
+            listener.onThingItemClick((Long) llSearchItem.getTag());
         }
     }
 
@@ -48,15 +52,19 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     private OnThingItemClickListener listener;
 
-    private List<Searcher2.SearchItem> items;
+    private List<SearchItem> items;
 
     public SearchAdapter() {
         items = new ArrayList<>();
     }
 
-    public SearchAdapter(List<Searcher2.SearchItem> items /*, OnThingItemClickListener listener*/) {
+    public SearchAdapter(List<SearchItem> items , OnThingItemClickListener listener) {
         this.items = items;
-//        this.listener = listener;
+        this.listener = listener;
+    }
+
+    public void setOnThingItemClickListener(OnThingItemClickListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -78,7 +86,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         viewHolder.setOnThingItemClickListener(listener);
 
-        viewHolder.tvSearchedText.setText(items.get(i).getFormattedText());
+        viewHolder.llSearchItem.setTag( items.get(i).getThing().getId() );
+        viewHolder.tvSearchedText.setText(Html.fromHtml( items.get(i).getFormatedText()) );
     }
 
     @Override
@@ -91,17 +100,17 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         return items.get(position).getThing().getId();
     }
 
-    public void addItem(Searcher2.SearchItem item) {
+    public void addItem(SearchItem item) {
         items.add(item);
         notifyDataSetChanged();
     }
 
-    public void addAllItem(List<Searcher2.SearchItem> items) {
+    public void addAllItem(List<SearchItem> items) {
         this.items = items;
         notifyDataSetChanged();
     }
 
-    public void deleteItem(Searcher2.SearchItem item) {
+    public void deleteItem(SearchItem item) {
         int index = items.indexOf(item);
         items.remove(item);
         notifyDataSetChanged();

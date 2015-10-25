@@ -28,7 +28,7 @@ public class SearcherTest {
     @Test
     public void testSearch() throws Exception {
         List<Thing> things = new ArrayList<>();
-        things.add(new Thing(0, "", "Casa \n Choni \n PePelUís \n La maRe que la cata \n Mi caspa", "", new Date()));
+        things.add(new Thing(0, "", "Cass \n Casita \n Fito cierra en caSü su gira triunfal \n No sin mi Caasa \n Patio del Tesorero, la empresa dueña de la Casaa de la Moneda y representada por Manuel Marañón", "", new Date()));
         when(searcher.getThings()).thenReturn(things);
 
         searcher.search("caca");
