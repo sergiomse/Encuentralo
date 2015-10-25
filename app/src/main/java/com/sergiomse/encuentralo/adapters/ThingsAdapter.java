@@ -1,16 +1,14 @@
 package com.sergiomse.encuentralo.adapters;
 
-import android.content.DialogInterface;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -69,12 +67,12 @@ public class ThingsAdapter extends RecyclerView.Adapter<ThingsAdapter.ViewHolder
 
     private List<Thing> things;
 
-    public ThingsAdapter(List<Thing> things, DisplayMetrics dm, OnThingItemClickListener listener) {
+    public ThingsAdapter(Context context, List<Thing> things, DisplayMetrics dm, OnThingItemClickListener listener) {
         this.things = things;
         this.dm = dm;
         this.listener = listener;
 
-        sdf = new SimpleDateFormat("'El 'd' de 'MMM' de 'yyyy' a las 'HH:mm");
+        sdf = new SimpleDateFormat(context.getString(R.string.thing_date));
     }
 
     @Override
@@ -99,7 +97,7 @@ public class ThingsAdapter extends RecyclerView.Adapter<ThingsAdapter.ViewHolder
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, (int) (150 * dm.density));
             viewHolder.rootLayout.setLayoutParams(params);
             viewHolder.rootLayout.setTag(-1);
-//            viewHolder.tvTags.setText("");
+
         } else {
             Thing thing = things.get(i - 1);
             viewHolder.rootLayout.setTag(thing.getId());

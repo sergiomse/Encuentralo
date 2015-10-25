@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.sergiomse.encuentralo.R;
 import com.sergiomse.encuentralo.model.Thing;
 
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ public class ThingsDB {
 
         private static final String TAG = ThingsDBOpenHelper.class.getSimpleName();
 
+        private Context context;
 
 
         private static final String CREATE_TABLE = "create table " +
@@ -54,6 +56,7 @@ public class ThingsDB {
 
         public ThingsDBOpenHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
+            this.context = context;
         }
 
         @Override
@@ -63,7 +66,7 @@ public class ThingsDB {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            Log.d(TAG, "onUpgrade database ThingsDB");
+            Log.d(TAG, context.getString(R.string.database_msg));
         }
     }
 
@@ -111,6 +114,7 @@ public class ThingsDB {
             thing.setModifDate(new Date(Long.parseLong(c.getString(4))));
             things.add(thing);
         }
+        c.close();
 
         return things;
     }
@@ -126,6 +130,7 @@ public class ThingsDB {
             thing.setLocation(c.getString(3));
             thing.setModifDate(new Date(Long.parseLong(c.getString(4))));
         }
+        c.close();
 
         return thing;
     }

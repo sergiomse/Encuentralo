@@ -1,18 +1,12 @@
 package com.sergiomse.encuentralo;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.Camera;
-import android.hardware.camera2.CameraAccessException;
-import android.hardware.camera2.CameraManager;
-import android.net.Uri;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -32,9 +26,6 @@ import com.sergiomse.encuentralo.model.Thing;
 import com.sergiomse.encuentralo.views.MainButtonsView;
 
 import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements ThingsAdapter.OnThingItemClickListener {
@@ -72,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements ThingsAdapter.OnT
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(getString(R.string.title_activity_main));
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
@@ -102,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements ThingsAdapter.OnT
         List<Thing> things = db.getThingsOrderedByDate();
         db.cleanup();
 
-        adapter = new ThingsAdapter(things, dm, this);
+        adapter = new ThingsAdapter(this, things, dm, this);
         recyclerView.setAdapter(adapter);
 
     }
@@ -114,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements ThingsAdapter.OnT
     private void dispatchTakePictureIntent() {
 
         if(!checkCameraHardware()) {
-            Toast.makeText(this, "No hay cámaras disponibles", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.camera_error5), Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -124,13 +116,7 @@ public class MainActivity extends AppCompatActivity implements ThingsAdapter.OnT
 
     /** Check if this device has a camera */
     private boolean checkCameraHardware() {
-        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
-            // this device has a camera
-            return true;
-        } else {
-            // no camera on this device
-            return false;
-        }
+        return getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
 
     @Override

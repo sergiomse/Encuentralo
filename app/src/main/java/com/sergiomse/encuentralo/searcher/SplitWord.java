@@ -3,9 +3,9 @@ package com.sergiomse.encuentralo.searcher;
 /**
  * Created by sergiomse@gmail.com on 25/10/2015.
  */
-public class SplittedWord {
+public class SplitWord {
 
-    public SplittedWord(String word, int start, int end) {
+    public SplitWord(String word, int start, int end) {
         this.word = word;
         this.start = start;
         this.end = end;
@@ -42,7 +42,7 @@ public class SplittedWord {
 
     @Override
     public String toString() {
-        return "SplittedWord{" +
+        return "SplitWord{" +
                 "word='" + word + '\'' +
                 ", start=" + start +
                 ", end=" + end +

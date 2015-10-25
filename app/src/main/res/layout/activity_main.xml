@@ -13,7 +13,7 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:id="@+id/toolbar"
-        android:title="¡Encuéntralo!">
+        android:title="@string/title_activity_main">
 
     </android.support.v7.widget.Toolbar>
 

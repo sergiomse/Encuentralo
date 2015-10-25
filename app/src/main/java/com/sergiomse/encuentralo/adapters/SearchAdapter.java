@@ -87,7 +87,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         viewHolder.setOnThingItemClickListener(listener);
 
         viewHolder.llSearchItem.setTag( items.get(i).getThing().getId() );
-        viewHolder.tvSearchedText.setText(Html.fromHtml( items.get(i).getFormatedText()) );
+        viewHolder.tvSearchedText.setText(Html.fromHtml( items.get(i).getFormattedText()) );
     }
 
     @Override

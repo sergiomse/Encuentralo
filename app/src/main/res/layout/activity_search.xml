@@ -13,7 +13,7 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:id="@+id/toolbar"
-        android:title="Búsqueda">
+        android:title="@string/title_activity_search">
 
     </android.support.v7.widget.Toolbar>
 
@@ -70,7 +70,7 @@
             android:layout_height="match_parent"
             android:id="@+id/noSearchItems"
             android:gravity="center"
-            android:text="No se han encontrado elementos"
+            android:text="@string/no_elements_founds"
             android:textSize="22sp"/>
 
         <android.support.v7.widget.RecyclerView

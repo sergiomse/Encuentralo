@@ -27,7 +27,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Etiquetas"
+            android:text="@string/hint_tags"
             android:textColor="#000"
             android:textSize="22sp" />
 
@@ -44,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Localización"
+            android:text="@string/hint_location"
             android:textColor="#000"
             android:textSize="22sp" />
 

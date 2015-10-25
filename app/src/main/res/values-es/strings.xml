@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="camera_error2">No se puede abrir la cámara:</string>
+    <string name="camera_error">No se puede obtener la cámara</string>
+    <string name="hello_world">¡Hola Mundo!</string>
+    <string name="thing_date">\'El \'d\' de \'MMM\' de \'yyyy\' a las \'HH:mm</string>
+    <string name="title_activity_camera">CameraActivity</string>
+    <string name="title_activity_photo_location">PhotoLocationActivity</string>
+    <string name="title_activity_search">Búsqueda</string>
+    <string name="action_settings">Configuración</string>
+    <string name="file_error1">Error creando el archivo de medios, comprueba los permisos de almacenamiento.</string>
+    <string name="file_error2">Fichero no encontrado: </string>
+    <string name="file_error3">Error accediendo a fichero: </string>
+    <string name="file_error4">Fallo al crear el directorio</string>
+    <string name="camera_error3">Error estableciendo la previsualización de la cámara: </string>
+    <string name="camera_error4">Error iniciando la previsualización de la cámara: </string>
+    <string name="database_msg">onUpgrade database ThingsDB</string>
+    <string name="camera_error5">No hay cámaras disponibles</string>
+    <string name="delete_thing_dialog_msg">¿Desea borrar este objeto?</string>
+    <string name="delete_thing_dialog_title">Borrar</string>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+    <string name="thing_validation_msg">Introduzca al menos una etiqueta</string>
+    <string name="button_capture">Capturar</string>
+    <string name="title_activity_main">¡Encuéntralo!</string>
+    <string name="remove">Borrar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="save">Guardar</string>
+    <string name="hint_tags">Etiquetas</string>
+    <string name="hint_location">Ubicación</string>
+    <string name="no_elements_founds">No se han encontrado elementos</string>
+</resources>

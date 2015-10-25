@@ -50,9 +50,9 @@ public class Searcher {
             SearchItem searchItem = new SearchItem(thing);
 
             //String tagWords[] = thing.getTags().split("[\\s\\n]");
-            List<SplittedWord> tagWords = getSplittedWords(thing.getTags());
+            List<SplitWord> tagWords = getSplittedWords(thing.getTags());
 
-            for(SplittedWord tagWord : tagWords) {
+            for(SplitWord tagWord : tagWords) {
                 for(String searchedWord : searchedWords) {
                     float confidence = DamerauLevenshteinAlgorithm.calculateConfidence(tagWord.getWord(), searchedWord);
                     if (confidence > 0.5f) {
@@ -90,7 +90,7 @@ public class Searcher {
                 sb.append(item.getThing().getTags().substring(item.getMatch(item.getMatches().size() - 1).getEnd()));
             }
 
-            item.setFormatedText(sb.toString().replaceAll("\\n", " <font color=\"black\"><strong>|</strong></font> "));
+            item.setFormattedText(sb.toString().replaceAll("\\n", " <font color=\"black\"><strong>|</strong></font> "));
         }
 
         Collections.sort(searchItems, new Comparator<SearchItem>() {
@@ -112,8 +112,8 @@ public class Searcher {
      * @param str
      * @return
      */
-    private List<SplittedWord> getSplittedWords(String str) {
-        List<SplittedWord> words = new ArrayList<>();
+    private List<SplitWord> getSplittedWords(String str) {
+        List<SplitWord> words = new ArrayList<>();
 
         int start = 0;
         int end = 0;
@@ -124,7 +124,7 @@ public class Searcher {
             if ( isWord  && (str.charAt(i) == '\n'  ||  str.charAt(i) == ' ') ) {
                     isWord = false;
                     end = i;
-                    words.add(new SplittedWord(str.substring(start, end), start, end));
+                    words.add(new SplitWord(str.substring(start, end), start, end));
                     continue;
             }
 
@@ -136,7 +136,7 @@ public class Searcher {
         }
 
         if(isWord) {
-            words.add(new SplittedWord(str.substring(start, str.length()), start, str.length()));
+            words.add(new SplitWord(str.substring(start, str.length()), start, str.length()));
         }
 
         return words;
@@ -156,8 +156,8 @@ public class Searcher {
             System.out.println(item.toString());
         }
 
-        List<SplittedWord> splitted = searcher.getSplittedWords("Casa \n Casita \n Fito cierra en caSa su gira triunfal \n No sin mi Caasa \n Patio del Tesorero, la empresa dueña de la Casa de la Moneda y representada por Manuel Marañón           ");
-        for (SplittedWord item : splitted ) {
+        List<SplitWord> splitted = searcher.getSplittedWords("Casa \n Casita \n Fito cierra en caSa su gira triunfal \n No sin mi Caasa \n Patio del Tesorero, la empresa dueña de la Casa de la Moneda y representada por Manuel Marañón           ");
+        for (SplitWord item : splitted ) {
             System.out.println(item.toString());
         }
     }

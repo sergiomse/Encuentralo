@@ -9,8 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -52,7 +50,7 @@ public class CameraActivity extends AppCompatActivity {
             FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
             preview.addView(mPreview);
         } else {
-            Toast.makeText(this, "No se puede obtener la cámara", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.camera_error), Toast.LENGTH_LONG).show();
             finish();
         }
     }
@@ -86,19 +84,19 @@ public class CameraActivity extends AppCompatActivity {
                 c = Camera.open(cameraId);
                 Camera.Parameters cameraParams = c.getParameters();
                 List<Camera.Size> cameraSizes = cameraParams.getSupportedPictureSizes();
-                Camera.Size bestCameraSize = calculateBestResoultion(cameraSizes);
+                Camera.Size bestCameraSize = calculateBestResolution(cameraSizes);
                 Camera.Parameters parameters = c.getParameters();
                 parameters.setPictureSize(bestCameraSize.width, bestCameraSize.height);
                 c.setParameters(parameters);
             } catch (Exception e) {
-                Log.d(TAG, "No se puede abrir la cámara: " + e.getMessage());
+                Log.d(TAG, getString(R.string.camera_error2) + e.getMessage());
             }
         }
 
         return c; // returns null if camera is unavailable
     }
 
-    private Camera.Size calculateBestResoultion(List<Camera.Size> cameraSizes) {
+    private Camera.Size calculateBestResolution(List<Camera.Size> cameraSizes) {
 
         long min = -1;
         Camera.Size minSize = null;
@@ -131,7 +129,7 @@ public class CameraActivity extends AppCompatActivity {
             File pictureFile = getOutputMediaFile();
             photoFile = pictureFile.getAbsolutePath();
             if (pictureFile == null){
-                Log.d(TAG, "Error creating media file, check storage permissions");
+                Log.d(TAG, getString(R.string.file_error1));
                 return;
             }
 
@@ -140,9 +138,9 @@ public class CameraActivity extends AppCompatActivity {
                 fos.write(data);
                 fos.close();
             } catch (FileNotFoundException e) {
-                Log.d(TAG, "File not found: " + e.getMessage());
+                Log.d(TAG, getString(R.string.file_error2) + e.getMessage());
             } catch (IOException e) {
-                Log.d(TAG, "Error accessing file: " + e.getMessage());
+                Log.d(TAG, getString(R.string.file_error3) + e.getMessage());
             }
 
             saveThumbnailPhoto();
@@ -191,7 +189,7 @@ public class CameraActivity extends AppCompatActivity {
 
     }
 
-    private static File getOutputMediaFile(){
+    private File getOutputMediaFile(){
         // To be safe, you should check that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.
 
@@ -203,7 +201,7 @@ public class CameraActivity extends AppCompatActivity {
         // Create the storage directory if it does not exist
         if (! mediaStorageDir.exists()){
             if (! mediaStorageDir.mkdirs()){
-                Log.d(TAG, "failed to create directory");
+                Log.d(TAG, getString(R.string.file_error4));
                 return null;
             }
         }

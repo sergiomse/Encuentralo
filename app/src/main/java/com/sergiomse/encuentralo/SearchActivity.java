@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -25,6 +26,9 @@ import java.util.List;
 
 public class SearchActivity extends AppCompatActivity implements SearchAdapter.OnThingItemClickListener {
 
+    private static final String TAG = SearchActivity.class.getSimpleName();
+
+
     private EditText etSearch;
     private RecyclerView searchRecyclerView;
     private Searcher searcher;
@@ -38,7 +42,7 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.O
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Búsqueda");
+        getSupportActionBar().setTitle(getString(R.string.title_activity_search));
 
         searcher = new Searcher(this);
 
@@ -90,18 +94,18 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.O
                     script.visit(new CommandVisitor<SearchItem>() {
                         @Override
                         public void visitInsertCommand(SearchItem item) {
-                            System.out.println("Insert: " + item);
+                            Log.d(TAG, "Insert: " + item);
                             adapter.addItem(item);
                         }
 
                         @Override
                         public void visitKeepCommand(SearchItem item) {
-                            System.out.println("Keep: " + item);
+                            Log.d(TAG, "Keep: " + item);
                         }
 
                         @Override
                         public void visitDeleteCommand(SearchItem item) {
-                            System.out.println("Delete: " + item);
+                            Log.d(TAG, "Delete: " + item);
                             adapter.deleteItem(item);
                         }
                     });

@@ -2,7 +2,6 @@ package com.sergiomse.encuentralo.searcher;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 /**
  * Created by sergio on 10/10/2015.

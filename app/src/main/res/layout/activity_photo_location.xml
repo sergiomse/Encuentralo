@@ -14,7 +14,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/app_name"
+            android:text="@string/title_activity_main"
             android:textSize="24sp" />
     </android.support.v7.widget.Toolbar>
 
@@ -29,7 +29,7 @@
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Borrar"
+            android:text="@string/remove"
             android:layout_alignParentLeft="true"
             android:onClick="buttonDeleteClick" />
 
@@ -44,7 +44,7 @@
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cancelar"
+                android:text="@string/cancel"
                 android:onClick="buttonCancelClick" />
 
             <Button
@@ -53,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="buttonSaveClick"
-                android:text="Guardar" />
+                android:text="@string/save" />
 
         </LinearLayout>
     </RelativeLayout>
@@ -97,7 +97,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/etTags"
-                    android:hint="Etiquetas"/>
+                    android:hint="@string/hint_tags"/>
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -108,7 +108,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/etLocation"
-                    android:hint="Localización"/>
+                    android:hint="@string/hint_location"/>
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
     </ScrollView>

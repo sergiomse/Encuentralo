@@ -13,14 +13,12 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.sergiomse.encuentralo.database.ThingsDB;
@@ -184,9 +182,9 @@ public class PhotoLocationActivity extends AppCompatActivity {
 
     public void buttonDeleteClick(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("¿Desea borrar este objeto?")
-                .setTitle("Borrar")
-                .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+        builder.setMessage(getString(R.string.delete_thing_dialog_msg))
+                .setTitle(getString(R.string.delete_thing_dialog_title))
+                .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         ThingsDB db = new ThingsDB(PhotoLocationActivity.this);
                         db.deleteThing(PhotoLocationActivity.this.thingId);
@@ -196,7 +194,7 @@ public class PhotoLocationActivity extends AppCompatActivity {
                         PhotoLocationActivity.this.finish();
                     }
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
                     }
@@ -254,7 +252,7 @@ public class PhotoLocationActivity extends AppCompatActivity {
 
     private boolean checkValidations() {
         if(etTags.getText().toString().trim().isEmpty()) {
-            Toast.makeText(this, "Introduzca al menos una etiqueta", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.thing_validation_msg), Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

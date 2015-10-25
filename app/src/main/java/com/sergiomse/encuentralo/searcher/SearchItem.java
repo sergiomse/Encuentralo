@@ -11,7 +11,7 @@ import java.util.List;
 public class SearchItem {
 
     private Thing thing;
-    private String formatedText;
+    private String formattedText;
     private List<Match> matches = new ArrayList<>();
     private int exactMatches;
     private float totalConfidence;
@@ -20,12 +20,12 @@ public class SearchItem {
         this.thing = thing;
     }
 
-    public String getFormatedText() {
-        return formatedText;
+    public String getFormattedText() {
+        return formattedText;
     }
 
-    public void setFormatedText(String formatedText) {
-        this.formatedText = formatedText;
+    public void setFormattedText(String formattedText) {
+        this.formattedText = formattedText;
     }
 
     public void setMatches(List<Match> matches) {

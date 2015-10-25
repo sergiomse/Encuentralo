@@ -1,12 +1,8 @@
 package com.sergiomse.encuentralo.searcher;
 
 
-import android.content.Context;
-
 import com.sergiomse.encuentralo.model.Thing;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -15,6 +11,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static org.mockito.Mockito.when;
 
 /**
  * Created by sergiomse@gmail.com on 24/10/2015.
